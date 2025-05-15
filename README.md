@@ -70,7 +70,7 @@ The API will be available at `http://localhost:8000`
 
 Run the test suite using pytest:
 ```bash
-pytest
+docker run calculator-api pytest -v
 ```
 
 ## API Usage Examples
@@ -120,14 +120,6 @@ calculator-api/
 - Pytest (>= 6.2.4, < 6.3.0) - Testing framework
 - HTTPX (>= 0.18.2, < 0.19.0) - HTTP client for testing
 - Requests (>= 2.28.0) - HTTP library for testing
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
 
 ## Notes
 
