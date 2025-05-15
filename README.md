@@ -1,129 +1,161 @@
 # Calculator API
 
-A FastAPI-based Calculator API that provides basic arithmetic operations through RESTful endpoints. This project demonstrates a simple yet robust implementation of a microservice using modern Python web frameworks and Docker containerization.
+Welcome to our Calculator API project! This is a simple yet powerful calculator service that helps you perform basic math operations through API calls. We've built it with simplicity and best practices in mind.
 
-## Features
+## What Can This API Do?
 
-- Basic arithmetic operations (add, subtract, multiply, divide)
-- RESTful API endpoints
-- Docker support
-- Comprehensive test suite
+Think of it as your pocket calculator, but accessible through the internet! You can:
+- Add numbers together
+- Subtract one number from another
+- Multiply numbers
+- Divide numbers (and yes, we handle division by zero gracefully!)
 
-## API Endpoints
+## Getting Started
 
-- `GET /` - Welcome message
-- `GET /add/{a}/{b}` - Add two numbers
-- `GET /subtract/{a}/{b}` - Subtract second number from first
-- `GET /multiply/{a}/{b}` - Multiply two numbers
-- `GET /divide/{a}/{b}` - Divide first number by second (with zero division protection)
+### Running Locally
+First, make sure you have Python 3.9 or newer installed. Then:
 
-## Prerequisites
-
-- Python 3.9 or higher
-- Docker (optional, for containerized deployment)
-- Git
-
-## Local Setup
-
-1. Clone the repository:
+1. Clone this repository:
    ```bash
-   git clone <repository-url>
-   cd calculator-api
+   git clone https://github.com/eligosleyak/Calculator-12FactorApp.git
+   cd Calculator-12FactorApp
    ```
 
-2. Create and activate a virtual environment:
+2. Set up your workspace:
    ```bash
    python -m venv .venv
-   # On Windows
+
+   # For Windows users:
    .venv\Scripts\activate
-   # On Unix or MacOS
+
+   # For Mac or Linux users:
    source .venv/bin/activate
    ```
 
-3. Install dependencies:
+3. Install the requirements:
    ```bash
    pip install -r requirements.txt
    ```
 
-4. Run the application:
+4. Start the API:
    ```bash
    uvicorn app.main:app --host 0.0.0.0 --port 8000
    ```
 
-The API will be available at `http://localhost:8000`
-
-## Docker Setup
-
-1. Build the Docker image:
-   ```bash
-   docker build -t calculator-api .
-   ```
-
-2. Run the container:
-   ```bash
-   docker run -d -p 8000:8000 calculator-api
-   ```
-
-The API will be available at `http://localhost:8000`
-
-## Testing
-
-Run the test suite using pytest:
+### Using Docker
+If you prefer using Docker, it's straightforward:
 ```bash
+# Build the image
+docker build -t calculator-api .
+
+# Run the container
+docker run -d -p 8000:8000 calculator-api
+```
+
+## Try It Out
+
+Here are some examples to get you started:
+
+```bash
+# Say hello to the API
+curl http://localhost:8000/
+# Returns: {"message": "Welcome to the CalculatorAPI"}
+
+# Add 5 and 3
+curl http://localhost:8000/add/5/3
+# Returns: {"result": 8}
+
+# Multiply 6 and 7
+curl http://localhost:8000/multiply/6/7
+# Returns: {"result": 42}
+```
+
+## Running Tests
+
+### Locally
+```bash
+pytest
+```
+
+### In Docker
+```bash
+# Run tests in a new container with verbose output
 docker run calculator-api pytest -v
 ```
 
-## API Usage Examples
+## How We Follow the 12-Factor App Methodology
 
-### Add Numbers
-```bash
-curl http://localhost:8000/add/5/3
-# Response: {"result": 8}
-```
+We've built this application following the twelve-factor app methodology, which helps us create maintainable and scalable software. Here's how we implement each factor:
 
-### Subtract Numbers
-```bash
-curl http://localhost:8000/subtract/10/4
-# Response: {"result": 6}
-```
+1. **Codebase**
+   - Single codebase in version control
+   - Same code goes everywhere
 
-### Multiply Numbers
-```bash
-curl http://localhost:8000/multiply/6/7
-# Response: {"result": 42}
-```
+2. **Dependencies**
+   - All dependencies are explicitly declared in requirements.txt
+   - Virtual environment ensures isolation
+   ```python
+   # requirements.txt
+   fastapi>=0.68.0,<0.69.0
+   uvicorn>=0.15.0,<0.16.0
+   ```
 
-### Divide Numbers
-```bash
-curl http://localhost:8000/divide/20/5
-# Response: {"result": 4.0}
-```
+3. **Configuration**
+   - Configuration is stored in the environment
+   - No hard-coded config values in the code
+
+4. **Backing Services**
+   - Ready for external service attachment
+   - Services can be swapped without code changes
+
+5. **Build, Release, Run**
+   - Build and run stages are separated in our Dockerfile
+   ```dockerfile
+   # Build stage
+   FROM python:3.9-slim as build
+   # Run stage
+   FROM build as production
+   ```
+
+6. **Processes**
+   - Application runs statelessly
+   - Each request stands alone
+
+7. **Port Binding**
+   - Self-contained service on port 8000
+   - No external web servers needed
+   ```python
+   uvicorn app.main:app --host 0.0.0.0 --port 8000
+   ```
+
+8. **Concurrency**
+   - Scales through Docker containers
+   - Each process is independent
+
+9. **Disposability**
+   - Quick startup and graceful shutdown
+   - Containerized for easy replacement
+
+10. **Development/Production Parity**
+    - Same dependencies everywhere
+    - Docker ensures consistent environments
+
+11. **Logs**
+    - All logs go to stdout
+    - FastAPI handles request logging
+
+12. **Admin Processes**
+    - One-off admin tasks run in same environment
+    - Uses same code and configuration
 
 ## Project Structure
-
 ```
 calculator-api/
 ├── app/
-│   └── main.py          # Main application file with API endpoints
+│   └── main.py          # Core application logic
 ├── tests/
-│   └── test_calculator.py  # Test suite
-├── Dockerfile           # Docker configuration
-├── requirements.txt     # Python dependencies
-├── conftest.py         # Pytest configuration
-└── README.md           # Project documentation
+│   └── test_calculator.py  # Making sure everything works
+├── Dockerfile           # Container configuration
+├── requirements.txt     # Project dependencies
+└── README.md           # You're reading this now
 ```
-
-## Dependencies
-
-- FastAPI (>= 0.68.0, < 0.69.0) - Web framework
-- Uvicorn (>= 0.15.0, < 0.16.0) - ASGI server
-- Pytest (>= 6.2.4, < 6.3.0) - Testing framework
-- HTTPX (>= 0.18.2, < 0.19.0) - HTTP client for testing
-- Requests (>= 2.28.0) - HTTP library for testing
-
-## Notes
-
-- The API uses integer inputs for all operations
-- Division by zero is handled with an appropriate error response
-- All endpoints return JSON responses
-- The Docker container runs on port 8000 by default
