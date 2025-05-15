@@ -83,70 +83,39 @@ pytest
 docker run calculator-api pytest -v
 ```
 
-## How We Follow the 12-Factor App Methodology
+## Implemented 12-Factor App Principles
 
-We've built this application following the twelve-factor app methodology, which helps us create maintainable and scalable software. Here's how we implement each factor:
+Our application implements several key principles from the twelve-factor methodology:
 
 1. **Codebase**
-   - Single codebase in version control
-   - Same code goes everywhere
+   - Single codebase tracked in Git repository
+   - Same code used for all deployments
 
 2. **Dependencies**
-   - All dependencies are explicitly declared in requirements.txt
-   - Virtual environment ensures isolation
+   - All dependencies explicitly declared in requirements.txt
+   - Virtual environment ensures dependency isolation
    ```python
-   # requirements.txt
+   # requirements.txt shows exact versions needed
    fastapi>=0.68.0,<0.69.0
    uvicorn>=0.15.0,<0.16.0
    ```
 
-3. **Configuration**
-   - Configuration is stored in the environment
-   - No hard-coded config values in the code
-
-4. **Backing Services**
-   - Ready for external service attachment
-   - Services can be swapped without code changes
-
-5. **Build, Release, Run**
-   - Build and run stages are separated in our Dockerfile
-   ```dockerfile
-   # Build stage
-   FROM python:3.9-slim as build
-   # Run stage
-   FROM build as production
-   ```
-
-6. **Processes**
-   - Application runs statelessly
-   - Each request stands alone
-
-7. **Port Binding**
-   - Self-contained service on port 8000
-   - No external web servers needed
+3. **Port Binding**
+   - Application is self-contained
+   - Binds to port 8000 and exports HTTP as a service
    ```python
    uvicorn app.main:app --host 0.0.0.0 --port 8000
    ```
 
-8. **Concurrency**
-   - Scales through Docker containers
-   - Each process is independent
+4. **Processes**
+   - Application is stateless
+   - Each API request is handled independently
+   - No shared state between requests
 
-9. **Disposability**
-   - Quick startup and graceful shutdown
-   - Containerized for easy replacement
-
-10. **Development/Production Parity**
-    - Same dependencies everywhere
-    - Docker ensures consistent environments
-
-11. **Logs**
-    - All logs go to stdout
-    - FastAPI handles request logging
-
-12. **Admin Processes**
-    - One-off admin tasks run in same environment
-    - Uses same code and configuration
+5. **Disposability**
+   - Fast startup through minimal dependencies
+   - Clean shutdown with FastAPI
+   - Containerized for easy deployment and removal
 
 ## Project Structure
 ```
@@ -154,7 +123,7 @@ calculator-api/
 ├── app/
 │   └── main.py          # Core application logic
 ├── tests/
-│   └── test_calculator.py  # Making sure everything works
+│   └── test_calculator.py  # Test suite
 ├── Dockerfile           # Container configuration
 ├── requirements.txt     # Project dependencies
 └── README.md           # You're reading this now
